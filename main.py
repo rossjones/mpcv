@@ -50,8 +50,11 @@ def index():
 @app.route('/set_postcode')
 def set_postcode():
     postcode = flask.request.args.get('postcode')
+    if not postcode or not postcode.strip():
+        flask.flash("Please specify a postcode")
+        return flask.redirect(flask.url_for('index'))
+    
     constituency = lookups.lookup_postcode(postcode)
-
     if 'error' in constituency:
         flask.flash(constituency['error'], 'danger')
         return flask.redirect(flask.url_for('index'))
